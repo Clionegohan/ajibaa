@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+}
+
+.wa-paper {
+  background: linear-gradient(135deg, #fff8dc 0%, #f5f5dc 100%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.wa-border {
+  border: 2px solid #8b4513;
+  border-radius: 8px;
+}
