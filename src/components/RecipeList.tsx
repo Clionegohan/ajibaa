@@ -1,4 +1,5 @@
 import { Recipe } from '@/types/recipe';
+import LikeButton from '@/components/LikeButton';
 
 interface RecipeListProps {
   recipes: Recipe[];
@@ -39,9 +40,21 @@ export default function RecipeList({ recipes }: RecipeListProps) {
             </span>
           </div>
           
-          <div className="flex justify-between items-center text-sm text-wa-charcoal/70">
+          <div className="flex justify-between items-center text-sm text-wa-charcoal/70 mb-3">
             <span>⏱️ {recipe.cookingTime}分</span>
             <span>👥 {recipe.servings}人分</span>
+          </div>
+          
+          {/* いいねボタン */}
+          <div className="flex justify-between items-center">
+            <LikeButton 
+              recipeId={recipe._id}
+              likeCount={recipe.likeCount}
+              isLiked={false} // TODO: ユーザーのいいね状態を取得
+            />
+            <span className="text-xs text-wa-charcoal/50">
+              👁️ {recipe.viewCount}
+            </span>
           </div>
           
           {recipe.story && (

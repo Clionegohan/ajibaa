@@ -44,3 +44,58 @@ export const createRecipe = mutation({
     return recipeId;
   },
 });
+
+// いいね機能
+export const toggleLike = mutation({
+  args: {
+    recipeId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // TODO: 認証機能実装後に有効化
+    // const identity = await ctx.auth.getUserIdentity();
+    // if (!identity) throw new Error("認証が必要です");
+    
+    const userId = "temp-user-id"; // 認証実装後に実際のユーザーIDに変更
+    const { recipeId } = args;
+    
+    console.log("Toggle like requested:", { recipeId, userId });
+    
+    // TODO: 実際のいいね機能実装
+    // 1. 既存のいいねレコードを検索
+    // 2. いいね済みなら削除、未いいねなら追加
+    // 3. レシピのlikeCountを更新
+    
+    // 開発中のメッセージ
+    console.log("いいね機能は開発中です");
+    
+    return { success: true };
+  },
+});
+
+// コメント機能
+export const addComment = mutation({
+  args: {
+    recipeId: v.string(),
+    content: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // TODO: 認証機能実装後に有効化
+    // const identity = await ctx.auth.getUserIdentity();
+    // if (!identity) throw new Error("認証が必要です");
+    
+    const userId = "temp-user-id"; // 認証実装後に実際のユーザーIDに変更
+    const { recipeId, content } = args;
+    
+    console.log("Add comment requested:", { recipeId, content, userId });
+    
+    // TODO: 実際のコメント機能実装
+    // 1. コメントをデータベースに保存
+    // 2. 投稿者の名前を取得
+    // 3. リアルタイム更新
+    
+    // 開発中のメッセージ
+    console.log("コメント機能は開発中です");
+    
+    return { success: true };
+  },
+});
