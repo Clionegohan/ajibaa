@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import RecipeList from "@/components/RecipeList";
 import Auth from "@/components/Auth";
+import PrefectureFilter from "@/components/PrefectureFilter";
 import { Recipe } from "@/types/recipe";
 
 // サンプルデータ（Convex接続まではこれを使用）
@@ -66,11 +68,17 @@ const sampleRecipes: Recipe[] = [
 ];
 
 export default function Home() {
+  const [selectedPrefecture, setSelectedPrefecture] = useState("");
   const hello = useQuery(api.queries.hello);
   const convexRecipes = useQuery(api.queries.getRecipes);
   
   // Convexからデータが取得できればそれを、できなければサンプルデータを使用
   const recipes = convexRecipes && convexRecipes.length > 0 ? convexRecipes : sampleRecipes;
+  
+  // 都道府県でフィルタリング
+  const filteredRecipes = selectedPrefecture 
+    ? recipes.filter(recipe => recipe.prefecture === selectedPrefecture)
+    : recipes;
 
   return (
     <main className="min-h-screen bg-wa-cream">
@@ -103,7 +111,32 @@ export default function Home() {
           <h2 className="text-2xl font-semibold text-wa-charcoal mb-6">
             🍽️ みんなのレシピ
           </h2>
-          <RecipeList recipes={recipes} />
+          
+          {/* 都道府県フィルター */}
+          <PrefectureFilter 
+            recipes={recipes}
+            selectedPrefecture={selectedPrefecture}
+            onFilterChange={setSelectedPrefecture}
+          />
+          
+          {/* フィルター結果の表示 */}
+          {selectedPrefecture && (
+            <div className="mb-4 p-3 bg-wa-orange/10 rounded-lg">
+              <p className="text-sm text-wa-charcoal">
+                📍 <strong>{selectedPrefecture}</strong>のレシピ {filteredRecipes.length}件
+                {filteredRecipes.length > 0 && (
+                  <button 
+                    onClick={() => setSelectedPrefecture("")}
+                    className="ml-2 text-wa-orange hover:underline text-sm"
+                  >
+                    フィルターを解除
+                  </button>
+                )}
+              </p>
+            </div>
+          )}
+          
+          <RecipeList recipes={filteredRecipes} />
         </section>
         
         {/* Convex接続テスト（開発用） */}
