@@ -83,8 +83,19 @@ export default function Home() {
         </p>
         
         {/* 認証セクション */}
-        <section className="mb-12">
+        <section className="mb-8">
           <Auth />
+        </section>
+        
+        {/* レシピ投稿リンク */}
+        <section className="mb-12 text-center">
+          <a
+            href="/recipes/new"
+            className="inline-block px-6 py-3 wa-paper wa-border bg-wa-orange text-white font-semibold rounded-lg 
+                     hover:bg-wa-orange/80 transition-all shadow-lg"
+          >
+            ✏️ レシピを投稿する
+          </a>
         </section>
         
         {/* レシピ一覧 */}

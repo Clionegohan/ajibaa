@@ -46,8 +46,8 @@ describe('RecipeForm Component', () => {
       </MockConvexProvider>
     );
     
-    expect(screen.getByText(/材料/i)).toBeInTheDocument();
-    expect(screen.getByText(/材料を追加/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /材料/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /材料を追加/i })).toBeInTheDocument();
   });
 
   it('should render cooking steps section', () => {
@@ -57,8 +57,8 @@ describe('RecipeForm Component', () => {
       </MockConvexProvider>
     );
     
-    expect(screen.getByText(/作り方/i)).toBeInTheDocument();
-    expect(screen.getByText(/手順を追加/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /作り方/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /手順を追加/i })).toBeInTheDocument();
   });
 
   it('should have submit button', () => {
@@ -68,7 +68,7 @@ describe('RecipeForm Component', () => {
       </MockConvexProvider>
     );
     
-    const submitButton = screen.getByText(/レシピを投稿/i);
+    const submitButton = screen.getByRole('button', { name: /レシピを投稿/i });
     expect(submitButton).toBeInTheDocument();
     expect(submitButton).toHaveClass('wa-paper', 'wa-border');
   });
@@ -82,11 +82,13 @@ describe('RecipeForm Component', () => {
       </MockConvexProvider>
     );
     
-    const submitButton = screen.getByText(/レシピを投稿/i);
+    const submitButton = screen.getByRole('button', { name: /レシピを投稿/i });
     await user.click(submitButton);
     
     // バリデーションエラーメッセージが表示される
-    expect(screen.getByText(/レシピ名を入力してください/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/レシピ名を入力してください/i)).toBeInTheDocument();
+    });
   });
 
   it('should add ingredient when clicking add button', async () => {
