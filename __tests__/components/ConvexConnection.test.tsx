@@ -10,15 +10,15 @@ const MockConvexProvider = ({ children }: { children: React.ReactNode }) => (
 );
 
 describe('Convex Connection Test', () => {
-  it('should render connection status section', () => {
+  it('should render development status section', () => {
     render(
       <MockConvexProvider>
         <Home />
       </MockConvexProvider>
     );
     
-    const connectionStatus = screen.getByText(/Convex接続状況/i);
-    expect(connectionStatus).toBeInTheDocument();
+    const developmentStatus = screen.getByText(/開発状況/i);
+    expect(developmentStatus).toBeInTheDocument();
   });
 
   it('should show loading state initially', () => {
@@ -32,14 +32,14 @@ describe('Convex Connection Test', () => {
     expect(loadingText).toBeInTheDocument();
   });
 
-  it('should show recipe count loading state', () => {
+  it('should show data source information', () => {
     render(
       <MockConvexProvider>
         <Home />
       </MockConvexProvider>
     );
     
-    const recipeCount = screen.getByText(/レシピ数: 読み込み中.../i);
-    expect(recipeCount).toBeInTheDocument();
+    const dataSource = screen.getByText(/データソース: サンプルデータ/i);
+    expect(dataSource).toBeInTheDocument();
   });
 });

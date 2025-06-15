@@ -3,6 +3,7 @@
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import RecipeList from "@/components/RecipeList";
+import Auth from "@/components/Auth";
 import { Recipe } from "@/types/recipe";
 
 // サンプルデータ（Convex接続まではこれを使用）
@@ -80,6 +81,11 @@ export default function Home() {
         <p className="text-lg text-wa-charcoal text-center mb-8">
           おばあちゃんの味を次世代へ
         </p>
+        
+        {/* 認証セクション */}
+        <section className="mb-12">
+          <Auth />
+        </section>
         
         {/* レシピ一覧 */}
         <section className="mb-12">
