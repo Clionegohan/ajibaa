@@ -1,10 +1,8 @@
 "use client";
 
-import { useAuthActions, useCurrentUser } from "@convex-dev/auth/react";
-
 export default function Auth() {
-  const { signIn, signOut } = useAuthActions();
-  const user = useCurrentUser();
+  // 一時的に認証機能を無効化してUI表示のみテスト
+  const user = null;
 
   if (user) {
     return (
@@ -35,7 +33,7 @@ export default function Auth() {
       </p>
       
       <button
-        onClick={() => signIn("google")}
+        onClick={() => alert("認証機能は準備中です")}
         className="w-full px-6 py-3 wa-paper wa-border bg-white hover:bg-wa-cream/50 
                    text-wa-charcoal font-medium rounded-lg transition-all duration-200
                    flex items-center justify-center gap-3"
