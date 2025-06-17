@@ -12,7 +12,8 @@ export default function LikeButton({ recipeId, likeCount, isLiked }: LikeButtonP
   const [isLoading, setIsLoading] = useState(false);
   const toggleLike = useMutation(api.mutations.toggleLike);
 
-  const handleClick = async () => {
+  const handleClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (isLoading) return;
     
     setIsLoading(true);

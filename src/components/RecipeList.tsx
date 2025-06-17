@@ -1,11 +1,23 @@
 import { Recipe } from '@/types/recipe';
 import LikeButton from '@/components/LikeButton';
+import { useRouter } from 'next/navigation';
 
 interface RecipeListProps {
   recipes: Recipe[];
 }
 
 export default function RecipeList({ recipes }: RecipeListProps) {
+  const router = useRouter();
+
+  const handleRecipeClick = (recipeId: string) => {
+    router.push(`/recipes/${recipeId}`);
+  };
+
+  const handleAuthorClick = (e: React.MouseEvent, authorId: string) => {
+    e.stopPropagation();
+    router.push(`/profile/${authorId}`);
+  };
+
   if (recipes.length === 0) {
     return (
       <div className="text-center py-12">
@@ -19,9 +31,9 @@ export default function RecipeList({ recipes }: RecipeListProps) {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {recipes.map((recipe) => (
-        <a 
+        <div 
           key={recipe._id}
-          href={`/recipes/${recipe._id}`}
+          onClick={() => handleRecipeClick(recipe._id)}
           className="block wa-paper wa-border p-6 hover:shadow-lg transition-all hover:scale-105 cursor-pointer"
         >
           <h3 className="text-xl font-semibold text-wa-charcoal mb-2 hover:text-wa-orange transition-colors">
@@ -48,12 +60,12 @@ export default function RecipeList({ recipes }: RecipeListProps) {
           {/* 投稿者情報 */}
           {recipe.authorName && (
             <div className="mb-3">
-              <a 
-                href={`/profile/${recipe.authorId}`}
-                className="text-sm text-wa-charcoal/70 hover:text-wa-orange transition-colors"
+              <button 
+                onClick={(e) => handleAuthorClick(e, recipe.authorId)}
+                className="text-sm text-wa-charcoal/70 hover:text-wa-orange transition-colors text-left"
               >
                 👤 {recipe.authorName}
-              </a>
+              </button>
             </div>
           )}
           
@@ -74,7 +86,7 @@ export default function RecipeList({ recipes }: RecipeListProps) {
               {recipe.story}
             </p>
           )}
-        </a>
+        </div>
       ))}
     </div>
   );
