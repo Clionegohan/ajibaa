@@ -13,6 +13,8 @@ export interface Recipe {
   season?: string[];
   tags?: string[];
   imageUrl?: string;
+  ingredients?: RecipeIngredient[];
+  steps?: RecipeStep[];
   isPublished: boolean;
   viewCount: number;
   likeCount: number;

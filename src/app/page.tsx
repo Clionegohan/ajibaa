@@ -25,6 +25,51 @@ const sampleRecipes: Recipe[] = [
     servings: 4,
     season: ["秋", "冬"],
     tags: ["りんご", "郷土料理", "おばあちゃんの味"],
+    ingredients: [
+      {
+        _id: "ing-1-1",
+        recipeId: "sample-1",
+        name: "りんご",
+        amount: "3",
+        unit: "個",
+        order: 1
+      },
+      {
+        _id: "ing-1-2",
+        recipeId: "sample-1",
+        name: "砂糖",
+        amount: "大さじ2",
+        order: 2
+      },
+      {
+        _id: "ing-1-3",
+        recipeId: "sample-1",
+        name: "水",
+        amount: "50",
+        unit: "ml",
+        order: 3
+      }
+    ],
+    steps: [
+      {
+        _id: "step-1-1",
+        recipeId: "sample-1",
+        stepNumber: 1,
+        instruction: "りんごを皮をむいて8等分に切る"
+      },
+      {
+        _id: "step-1-2",
+        recipeId: "sample-1",
+        stepNumber: 2,
+        instruction: "鍋にりんごと砂糖、水を入れて弱火で20分煮る"
+      },
+      {
+        _id: "step-1-3",
+        recipeId: "sample-1",
+        stepNumber: 3,
+        instruction: "りんごが柔らかくなったら完成"
+      }
+    ],
     isPublished: true,
     viewCount: 150,
     likeCount: 23,
@@ -42,6 +87,52 @@ const sampleRecipes: Recipe[] = [
     cookingTime: 45,
     servings: 2,
     tags: ["粉もん", "関西", "ソース"],
+    ingredients: [
+      {
+        _id: "ing-2-1",
+        recipeId: "sample-2",
+        name: "お好み焼き粉",
+        amount: "100",
+        unit: "g",
+        order: 1
+      },
+      {
+        _id: "ing-2-2",
+        recipeId: "sample-2",
+        name: "キャベツ",
+        amount: "1/4",
+        unit: "個",
+        order: 2
+      },
+      {
+        _id: "ing-2-3",
+        recipeId: "sample-2",
+        name: "卵",
+        amount: "1",
+        unit: "個",
+        order: 3
+      }
+    ],
+    steps: [
+      {
+        _id: "step-2-1",
+        recipeId: "sample-2",
+        stepNumber: 1,
+        instruction: "キャベツを千切りにする"
+      },
+      {
+        _id: "step-2-2",
+        recipeId: "sample-2",
+        stepNumber: 2,
+        instruction: "お好み焼き粉と水、卵を混ぜて生地を作る"
+      },
+      {
+        _id: "step-2-3",
+        recipeId: "sample-2",
+        stepNumber: 3,
+        instruction: "フライパンで両面をこんがり焼く"
+      }
+    ],
     isPublished: true,
     viewCount: 200,
     likeCount: 45,
@@ -61,6 +152,50 @@ const sampleRecipes: Recipe[] = [
     servings: 3,
     season: ["通年"],
     tags: ["鶏肉", "北海道", "居酒屋"],
+    ingredients: [
+      {
+        _id: "ing-3-1",
+        recipeId: "sample-3",
+        name: "鶏もも肉",
+        amount: "300",
+        unit: "g",
+        order: 1
+      },
+      {
+        _id: "ing-3-2",
+        recipeId: "sample-3",
+        name: "醤油",
+        amount: "大さじ2",
+        order: 2
+      },
+      {
+        _id: "ing-3-3",
+        recipeId: "sample-3",
+        name: "片栗粉",
+        amount: "適量",
+        order: 3
+      }
+    ],
+    steps: [
+      {
+        _id: "step-3-1",
+        recipeId: "sample-3",
+        stepNumber: 1,
+        instruction: "鶏肉を一口大に切り、醤油で30分漬け込む"
+      },
+      {
+        _id: "step-3-2",
+        recipeId: "sample-3",
+        stepNumber: 2,
+        instruction: "片栗粉をまぶして180度の油で揚げる"
+      },
+      {
+        _id: "step-3-3",
+        recipeId: "sample-3",
+        stepNumber: 3,
+        instruction: "きつね色になったら完成"
+      }
+    ],
     isPublished: true,
     viewCount: 180,
     likeCount: 32,

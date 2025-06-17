@@ -23,9 +23,11 @@ export default function RecipeList({ recipes }: RecipeListProps) {
           key={recipe._id}
           className="wa-paper wa-border p-6 hover:shadow-lg transition-shadow"
         >
-          <h3 className="text-xl font-semibold text-wa-charcoal mb-2">
-            {recipe.title}
-          </h3>
+          <a href={`/recipes/${recipe._id}`} className="block">
+            <h3 className="text-xl font-semibold text-wa-charcoal mb-2 hover:text-wa-orange transition-colors">
+              {recipe.title}
+            </h3>
+          </a>
           
           <p className="text-wa-charcoal/80 mb-3 line-clamp-2">
             {recipe.description}
