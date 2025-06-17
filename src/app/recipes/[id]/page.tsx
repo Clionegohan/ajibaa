@@ -157,13 +157,23 @@ export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
 
         {/* いいね・コメント */}
         <div className="mt-8 bg-white p-6 rounded-lg wa-border">
-          <div className="flex items-center gap-4 mb-6">
-            <LikeButton 
-              recipeId={recipe._id} 
-              likeCount={recipe.likeCount} 
-              isLiked={false}
-            />
-            <span className="text-gray-600">👁️ {recipe.viewCount}回表示</span>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <LikeButton 
+                recipeId={recipe._id} 
+                likeCount={recipe.likeCount} 
+                isLiked={false}
+              />
+              <span className="text-gray-600">👁️ {recipe.viewCount}回表示</span>
+            </div>
+            
+            {/* 編集ボタン（作成者のみ表示） */}
+            <a
+              href={`/recipes/${recipe._id}/edit`}
+              className="px-4 py-2 bg-wa-orange/10 text-wa-orange border border-wa-orange rounded-lg hover:bg-wa-orange hover:text-white transition-colors"
+            >
+              ✏️ 編集
+            </a>
           </div>
           
           {/* <CommentSection recipeId={recipe._id} /> */}

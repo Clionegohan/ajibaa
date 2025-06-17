@@ -99,3 +99,67 @@ export const addComment = mutation({
     return { success: true };
   },
 });
+
+// レシピ更新
+export const updateRecipe = mutation({
+  args: {
+    id: v.string(),
+    title: v.string(),
+    description: v.string(),
+    story: v.optional(v.string()),
+    prefecture: v.string(),
+    category: v.string(),
+    difficulty: v.number(),
+    cookingTime: v.number(),
+    servings: v.number(),
+    tags: v.optional(v.array(v.string())),
+    isPublished: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    // TODO: 認証機能実装後に有効化
+    // const identity = await ctx.auth.getUserIdentity();
+    // if (!identity) throw new Error("認証が必要です");
+    
+    const { id, ...updateData } = args;
+    
+    console.log("Recipe update requested:", { id, updateData });
+    
+    // TODO: 実際のDB更新処理
+    // await ctx.db.patch(id as Id<"recipes">, {
+    //   ...updateData,
+    //   updatedAt: Date.now(),
+    // });
+    
+    // 開発中のメッセージ
+    console.log("レシピ更新機能は開発中です");
+    
+    return { success: true };
+  },
+});
+
+// レシピ削除
+export const deleteRecipe = mutation({
+  args: {
+    id: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // TODO: 認証機能実装後に有効化
+    // const identity = await ctx.auth.getUserIdentity();
+    // if (!identity) throw new Error("認証が必要です");
+    
+    const { id } = args;
+    
+    console.log("Recipe delete requested:", { id });
+    
+    // TODO: 実際のDB削除処理
+    // 1. 権限確認（作成者のみ削除可能）
+    // 2. レシピ削除
+    // 3. 関連データ（コメント、いいね）も削除
+    // await ctx.db.delete(id as Id<"recipes">);
+    
+    // 開発中のメッセージ
+    console.log("レシピ削除機能は開発中です");
+    
+    return { success: true };
+  },
+});
