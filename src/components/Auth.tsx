@@ -1,7 +1,8 @@
 "use client";
 
 export default function Auth() {
-  // 一時的に認証機能を無効化してUI表示のみテスト
+  // Phase 1では認証機能をシンプルに実装
+  // Phase 2で完全なConvex認証を統合予定
   const user = null;
 
   if (user) {
@@ -33,7 +34,7 @@ export default function Auth() {
       </p>
       
       <button
-        onClick={() => alert("認証機能は準備中です")}
+        onClick={() => alert("Phase 2で認証機能を完全実装予定")}
         className="w-full px-6 py-3 wa-paper wa-border bg-white hover:bg-wa-cream/50 
                    text-wa-charcoal font-medium rounded-lg transition-all duration-200
                    flex items-center justify-center gap-3"

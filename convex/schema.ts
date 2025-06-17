@@ -22,11 +22,10 @@ export default defineSchema({
     description: v.string(),
     story: v.optional(v.string()), // おばあちゃんの思い出話
     authorId: v.id("users"),
+    authorName: v.optional(v.string()), // 非正規化（パフォーマンス用）
     prefecture: v.string(),
     category: v.string(), // 主食、副菜、汁物、おやつ・デザート等
-    difficulty: v.number(), // 1-5の難易度
     cookingTime: v.number(), // 分
-    servings: v.number(), // 人分
     season: v.optional(v.array(v.string())), // 春、夏、秋、冬
     tags: v.optional(v.array(v.string())),
     imageUrl: v.optional(v.string()),

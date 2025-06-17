@@ -8,11 +8,37 @@ export const hello = query({
   },
 });
 
-// レシピ一覧取得（今後実装予定）
+// レシピ一覧取得
 export const getRecipes = query({
-  handler: async (ctx) => {
-    // TODO: 実際のレシピデータを取得
-    return [];
+  args: {
+    limit: v.optional(v.number()),
+    offset: v.optional(v.number()),
+    prefecture: v.optional(v.string()),
+    category: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    let recipesQuery = ctx.db.query("recipes")
+      .filter((q) => q.eq(q.field("isPublished"), true))
+      .order("desc");
+
+    // 都道府県フィルタ
+    if (args.prefecture) {
+      recipesQuery = recipesQuery.filter((q) => 
+        q.eq(q.field("prefecture"), args.prefecture!)
+      );
+    }
+
+    // カテゴリフィルタ
+    if (args.category) {
+      recipesQuery = recipesQuery.filter((q) => 
+        q.eq(q.field("category"), args.category!)
+      );
+    }
+
+    const recipes = await recipesQuery
+      .take(args.limit || 20);
+
+    return recipes;
   },
 });
 

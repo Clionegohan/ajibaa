@@ -1,21 +1,27 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { ConvexProvider, ConvexReactClient } from "convex/react";
+import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import Auth from '@/components/Auth'
 
 // モッククライアント
 const mockConvex = new ConvexReactClient("https://mock.convex.cloud");
 
 const MockConvexProvider = ({ children }: { children: React.ReactNode }) => (
-  <ConvexProvider client={mockConvex}>{children}</ConvexProvider>
+  <ConvexProvider client={mockConvex}>
+    <ConvexAuthProvider>
+      {children}
+    </ConvexAuthProvider>
+  </ConvexProvider>
 );
 
-// useAuthCurrentUserのモック
+// Phase 1: 認証機能のモック（簡素版）
 jest.mock('@convex-dev/auth/react', () => ({
   useAuthActions: () => ({
     signIn: jest.fn(),
     signOut: jest.fn(),
   }),
   useCurrentUser: () => null, // 初期状態では未ログイン
+  ConvexAuthProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
 describe('Auth Component', () => {

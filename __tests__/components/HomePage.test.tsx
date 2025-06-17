@@ -1,19 +1,35 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ConvexProvider, ConvexReactClient } from "convex/react";
+import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import Home from '@/app/page'
 
 // モッククライアント
 const mockConvex = new ConvexReactClient("https://mock.convex.cloud");
 
 const MockConvexProvider = ({ children }: { children: React.ReactNode }) => (
-  <ConvexProvider client={mockConvex}>{children}</ConvexProvider>
+  <ConvexProvider client={mockConvex}>
+    <ConvexAuthProvider>
+      {children}
+    </ConvexAuthProvider>
+  </ConvexProvider>
 );
 
 // useQueryのモック
 jest.mock('convex/react', () => ({
   ...jest.requireActual('convex/react'),
   useQuery: jest.fn(() => null), // Convexデータなし、サンプルデータを使用
+}));
+
+// Auth関連のモック
+jest.mock('@convex-dev/auth/react', () => ({
+  ...jest.requireActual('@convex-dev/auth/react'),
+  useAuthActions: () => ({
+    signIn: jest.fn(),
+    signOut: jest.fn(),
+  }),
+  useCurrentUser: () => null,
+  ConvexAuthProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
 describe('Home Page Prefecture Filter Integration', () => {
