@@ -18,11 +18,33 @@ export const getRecipes = query({
 
 // レシピ詳細取得
 export const getRecipeById = query({
-  args: { id: v.string() },
-  handler: async (ctx, { id }) => {
-    // TODO: 実際のレシピデータを取得
-    // 今はnullを返してローディング状態をテスト
-    return null;
+  args: { recipeId: v.id("recipes") },
+  handler: async (ctx, { recipeId }) => {
+    const recipe = await ctx.db.get(recipeId);
+    
+    if (!recipe) {
+      return null;
+    }
+
+    // 材料を取得
+    const ingredients = await ctx.db
+      .query("recipeIngredients")
+      .filter((q) => q.eq(q.field("recipeId"), recipeId))
+      .order("order")
+      .collect();
+
+    // 作り方を取得
+    const steps = await ctx.db
+      .query("recipeSteps")
+      .filter((q) => q.eq(q.field("recipeId"), recipeId))
+      .order("stepNumber")
+      .collect();
+
+    return {
+      ...recipe,
+      ingredients,
+      steps,
+    };
   },
 });
 
