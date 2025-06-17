@@ -8,9 +8,7 @@ export interface Recipe {
   authorName?: string;
   prefecture: string;
   category: string;
-  difficulty: number;
   cookingTime: number;
-  servings: number;
   season?: string[];
   tags?: string[];
   imageUrl?: string;

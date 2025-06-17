@@ -21,9 +21,7 @@ const sampleRecipes: Recipe[] = [
     authorName: "田中花子",
     prefecture: "青森県",
     category: "おやつ・デザート",
-    difficulty: 2,
     cookingTime: 30,
-    servings: 4,
     season: ["秋", "冬"],
     tags: ["りんご", "郷土料理", "おばあちゃんの味"],
     ingredients: [
@@ -85,9 +83,7 @@ const sampleRecipes: Recipe[] = [
     authorName: "大阪太郎",
     prefecture: "大阪府",
     category: "主食",
-    difficulty: 3,
     cookingTime: 45,
-    servings: 2,
     tags: ["粉もん", "関西", "ソース"],
     ingredients: [
       {
@@ -150,9 +146,7 @@ const sampleRecipes: Recipe[] = [
     authorName: "北海道次郎",
     prefecture: "北海道",
     category: "副菜",
-    difficulty: 3,
     cookingTime: 40,
-    servings: 3,
     season: ["通年"],
     tags: ["鶏肉", "北海道", "居酒屋"],
     ingredients: [

@@ -36,7 +36,6 @@ export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
     )
   }
 
-  const difficultyText = ['', '★☆☆', '★★☆', '★★★'][recipe.difficulty] || '★☆☆'
 
   return (
     <div className="min-h-screen bg-wa-cream">
@@ -64,17 +63,11 @@ export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
         </div>
 
         {/* メタデータ */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <div className="bg-white p-4 rounded-lg wa-border text-center">
             <div className="text-2xl mb-1">⏰</div>
             <div className="text-sm text-gray-600">調理時間</div>
             <div className="font-semibold text-wa-charcoal">{recipe.cookingTime}分</div>
-          </div>
-          
-          <div className="bg-white p-4 rounded-lg wa-border text-center">
-            <div className="text-2xl mb-1">👥</div>
-            <div className="text-sm text-gray-600">分量</div>
-            <div className="font-semibold text-wa-charcoal">{recipe.servings}人分</div>
           </div>
           
           <div className="bg-white p-4 rounded-lg wa-border text-center">

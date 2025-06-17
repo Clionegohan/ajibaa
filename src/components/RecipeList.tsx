@@ -19,15 +19,14 @@ export default function RecipeList({ recipes }: RecipeListProps) {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {recipes.map((recipe) => (
-        <div
+        <a 
           key={recipe._id}
-          className="wa-paper wa-border p-6 hover:shadow-lg transition-shadow"
+          href={`/recipes/${recipe._id}`}
+          className="block wa-paper wa-border p-6 hover:shadow-lg transition-all hover:scale-105 cursor-pointer"
         >
-          <a href={`/recipes/${recipe._id}`} className="block">
-            <h3 className="text-xl font-semibold text-wa-charcoal mb-2 hover:text-wa-orange transition-colors">
-              {recipe.title}
-            </h3>
-          </a>
+          <h3 className="text-xl font-semibold text-wa-charcoal mb-2 hover:text-wa-orange transition-colors">
+            {recipe.title}
+          </h3>
           
           <p className="text-wa-charcoal/80 mb-3 line-clamp-2">
             {recipe.description}
@@ -44,7 +43,6 @@ export default function RecipeList({ recipes }: RecipeListProps) {
           
           <div className="flex justify-between items-center text-sm text-wa-charcoal/70 mb-3">
             <span>⏱️ {recipe.cookingTime}分</span>
-            <span>👥 {recipe.servings}人分</span>
           </div>
           
           {/* 投稿者情報 */}
@@ -76,7 +74,7 @@ export default function RecipeList({ recipes }: RecipeListProps) {
               {recipe.story}
             </p>
           )}
-        </div>
+        </a>
       ))}
     </div>
   );
