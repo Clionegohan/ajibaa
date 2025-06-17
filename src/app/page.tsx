@@ -268,7 +268,7 @@ export default function Home() {
               <p className="text-sm text-wa-charcoal">
                 {searchQuery && (
                   <>
-                    🔍 "<strong>{searchQuery}</strong>" の検索結果: {searchedRecipes.length}件
+                    🔍 &quot;<strong>{searchQuery}</strong>&quot; の検索結果: {searchedRecipes.length}件
                     <button 
                       onClick={() => setSearchQuery("")}
                       className="ml-2 text-wa-orange hover:underline text-sm"
