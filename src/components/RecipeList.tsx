@@ -47,6 +47,18 @@ export default function RecipeList({ recipes }: RecipeListProps) {
             <span>👥 {recipe.servings}人分</span>
           </div>
           
+          {/* 投稿者情報 */}
+          {recipe.authorName && (
+            <div className="mb-3">
+              <a 
+                href={`/profile/${recipe.authorId}`}
+                className="text-sm text-wa-charcoal/70 hover:text-wa-orange transition-colors"
+              >
+                👤 {recipe.authorName}
+              </a>
+            </div>
+          )}
+          
           {/* いいねボタン */}
           <div className="flex justify-between items-center">
             <LikeButton 

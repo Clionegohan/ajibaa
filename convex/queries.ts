@@ -25,3 +25,13 @@ export const getRecipeById = query({
     return null;
   },
 });
+
+// ユーザープロフィール取得
+export const getUserProfile = query({
+  args: { userId: v.string() },
+  handler: async (ctx, { userId }) => {
+    // TODO: 実際のユーザーデータを取得
+    // 今はnullを返してローディング状態をテスト
+    return null;
+  },
+});

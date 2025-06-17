@@ -5,6 +5,7 @@ export interface Recipe {
   description: string;
   story?: string;
   authorId: string;
+  authorName?: string;
   prefecture: string;
   category: string;
   difficulty: number;
