@@ -104,3 +104,151 @@
    - `npm run test` でユニットテスト実行
    - `npm run test:watch` で監視モード
    - CI/CDでのテスト実行を必須とする
+
+## プロジェクトコンテキスト（20250617追加）
+
+### 技術スタック
+- **Next.js 14.2.15**: React基盤のフルスタックフレームワーク
+- **React 18**: UIライブラリ  
+- **TypeScript**: 型安全性の確保
+- **Tailwind CSS**: ユーティリティファーストCSSフレームワーク
+- **Convex**: リアルタイムデータベース・BaaS
+- **@convex-dev/auth**: 認証システム
+- **Jest + Testing Library**: テストフレームワーク
+
+### 技術選定理由
+- **Convex選定**: リアルタイム交流機能実現、型安全性、認証システム統合
+- **Next.js選定**: SEO対応、パフォーマンス最適化、開発体験向上
+- **TypeScript必須**: 型安全性確保、開発効率向上
+
+### プロジェクト制約
+- 日本の郷土料理・家庭料理に特化
+- おばあちゃん世代のユーザビリティ最優先
+- 文化継承の観点から「温かみ」のあるUI/UX
+- 無料利用基本、プライバシー保護最優先
+
+### 対象ユーザー
+- **メイン**: 60代以上のおばあちゃん世代
+- **セカンダリ**: 20-40代の孫世代
+- **UI要件**: 大きなフォント、シンプルなUI
+
+## プロジェクト知見管理（20250617追加）
+
+### 実装パターン
+- **TDD実装パターン**: テスト先行 → 最小実装 → リファクタリング
+- **Convex統合パターン**: queries.ts/mutations.ts → React hooks → UI component
+- **認証パターン**: @convex-dev/auth利用、セッション管理統合
+- **コンポーネント設計**: 単一責任、props型定義、テスタビリティ重視
+
+### アーキテクチャ選択理由
+- **App Router採用**: SEO最適化、パフォーマンス向上
+- **Convex採用**: リアルタイム機能、型安全性、認証統合
+- **TailwindCSS採用**: 高速開発、一貫性保持、レスポンシブ対応
+
+### 避けるべきパターン
+- **直接DB操作**: Convex mutations/queries以外でのデータ操作
+- **型定義省略**: any型使用、型アサーション乱用
+- **テスト後回し**: 実装後のテスト追加（TDD違反）
+- **コンポーネント肥大化**: 単一コンポーネントでの多機能実装
+
+## プロジェクト改善履歴（20250617追加）
+
+### 過去の改善事例
+- **認証システム簡素化** (20250615): 複雑な認証フローを@convex-dev/authで統合
+- **リアルタイム交流機能** (20250615): TDD導入でバグ削減、品質向上
+- **都道府県分類機能** (20250615): TDD実践により初回実装成功
+- **レシピ投稿機能** (20250615): データベース統合でパフォーマンス改善
+
+### 学習した教訓
+- **TDD効果**: 事前テスト作成により実装品質大幅向上
+- **Convex統合**: 型安全性とリアルタイム機能の両立が可能
+- **UI/UX重視**: ユーザー中心設計が機能採用率向上に直結
+- **Git管理**: feature branch利用で安全な開発フロー確立
+
+### 継続的改善項目
+- テストカバレッジ80%以上維持
+- ユーザビリティテスト定期実施
+- パフォーマンス監視とボトルネック特定
+- セキュリティ監査の定期実施
+
+## 共通パターン集（20250617追加）
+
+### 開発コマンドパターン
+```bash
+# 新機能開発開始
+git checkout -b feature/機能名
+npm run test:watch
+
+# 実装完了時
+npm run test
+npm run lint
+npm run typecheck
+npm run build
+
+# マージ・プッシュ
+git checkout main
+git merge feature/機能名
+git push origin main
+```
+
+### テスト実装パターン
+```typescript
+// コンポーネントテスト基本形
+import { render, screen } from '@testing-library/react'
+import { ConvexReactClient } from 'convex/react'
+import { ConvexProvider } from 'convex/react'
+
+const TestWrapper = ({ children }) => (
+  <ConvexProvider client={new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!)}>
+    {children}
+  </ConvexProvider>
+)
+
+describe('ComponentName', () => {
+  it('should render correctly', () => {
+    render(<ComponentName />, { wrapper: TestWrapper })
+    expect(screen.getByText('expected text')).toBeInTheDocument()
+  })
+})
+```
+
+### Convex統合パターン
+```typescript
+// queries.ts
+export const getRecipes = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db.query("recipes").collect()
+  }
+})
+
+// コンポーネント側
+const recipes = useQuery(api.queries.getRecipes)
+```
+
+## デバッグログ管理（20250617追加）
+
+### 重要なデバッグ記録
+本セクションでは、重要な問題解決プロセスや技術的課題の解決履歴を記録します。
+
+### 問題解決テンプレート
+問題が発生した際は、以下の形式で記録してください：
+
+```markdown
+#### [YYYYMMDD] 問題タイトル
+**問題**: 発生した問題の詳細
+**原因**: 根本原因の分析
+**解決**: 実装した解決策
+**学習**: 今後に活かす教訓
+**影響**: 他の機能への影響範囲
+```
+
+### 技術的課題解決履歴
+- **TDD導入時の課題**: テスト環境構築とConvexモック化の実現
+- **認証システム統合**: @convex-dev/authとNext.jsの連携最適化
+- **リアルタイム機能**: WebSocketとConvexリアルタイム機能の活用
+
+### デバッグ時の注意点
+- 問題発生時は必ずログを記録
+- 解決後は知見をプロジェクト知見に反映
+- 類似問題の再発防止策を検討

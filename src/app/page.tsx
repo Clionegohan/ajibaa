@@ -6,7 +6,9 @@ import { api } from "../../convex/_generated/api";
 import RecipeList from "@/components/RecipeList";
 import Auth from "@/components/Auth";
 import PrefectureFilter from "@/components/PrefectureFilter";
+import SearchBar from "@/components/SearchBar";
 import { Recipe } from "@/types/recipe";
+import { searchRecipes } from "@/lib/search";
 
 // サンプルデータ（Convex接続まではこれを使用）
 const sampleRecipes: Recipe[] = [
@@ -69,16 +71,22 @@ const sampleRecipes: Recipe[] = [
 
 export default function Home() {
   const [selectedPrefecture, setSelectedPrefecture] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const hello = useQuery(api.queries.hello);
   const convexRecipes = useQuery(api.queries.getRecipes);
   
   // Convexからデータが取得できればそれを、できなければサンプルデータを使用
   const recipes = convexRecipes && convexRecipes.length > 0 ? convexRecipes : sampleRecipes;
   
+  // 検索でフィルタリング
+  const searchedRecipes = searchQuery 
+    ? searchRecipes(recipes, searchQuery)
+    : recipes;
+  
   // 都道府県でフィルタリング
   const filteredRecipes = selectedPrefecture 
-    ? recipes.filter(recipe => recipe.prefecture === selectedPrefecture)
-    : recipes;
+    ? searchedRecipes.filter(recipe => recipe.prefecture === selectedPrefecture)
+    : searchedRecipes;
 
   return (
     <main className="min-h-screen bg-wa-cream">
@@ -112,6 +120,9 @@ export default function Home() {
             🍽️ みんなのレシピ
           </h2>
           
+          {/* 検索バー */}
+          <SearchBar onSearch={setSearchQuery} />
+          
           {/* 都道府県フィルター */}
           <PrefectureFilter 
             recipes={recipes}
@@ -120,17 +131,31 @@ export default function Home() {
           />
           
           {/* フィルター結果の表示 */}
-          {selectedPrefecture && (
+          {(searchQuery || selectedPrefecture) && (
             <div className="mb-4 p-3 bg-wa-orange/10 rounded-lg">
               <p className="text-sm text-wa-charcoal">
-                📍 <strong>{selectedPrefecture}</strong>のレシピ {filteredRecipes.length}件
-                {filteredRecipes.length > 0 && (
-                  <button 
-                    onClick={() => setSelectedPrefecture("")}
-                    className="ml-2 text-wa-orange hover:underline text-sm"
-                  >
-                    フィルターを解除
-                  </button>
+                {searchQuery && (
+                  <>
+                    🔍 "<strong>{searchQuery}</strong>" の検索結果: {searchedRecipes.length}件
+                    <button 
+                      onClick={() => setSearchQuery("")}
+                      className="ml-2 text-wa-orange hover:underline text-sm"
+                    >
+                      検索を解除
+                    </button>
+                  </>
+                )}
+                {searchQuery && selectedPrefecture && " | "}
+                {selectedPrefecture && (
+                  <>
+                    📍 <strong>{selectedPrefecture}</strong>でフィルター: {filteredRecipes.length}件
+                    <button 
+                      onClick={() => setSelectedPrefecture("")}
+                      className="ml-2 text-wa-orange hover:underline text-sm"
+                    >
+                      フィルターを解除
+                    </button>
+                  </>
                 )}
               </p>
             </div>
