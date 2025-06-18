@@ -16,7 +16,7 @@ export default function Auth() {
     return (
       <div className="flex items-center gap-4 p-4">
         <span className="text-wa-charcoal">
-          こんにちは、{user.name || user.email}さん
+          こんにちは、{(user as any)?.name || (user as any)?.email}さん
         </span>
         <button
           onClick={() => signOut()}

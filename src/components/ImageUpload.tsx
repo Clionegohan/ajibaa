@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import Image from "next/image";
 
 interface ImageUploadProps {
   onImageUpload: (storageId: string, url: string) => void;
@@ -140,9 +141,11 @@ export default function ImageUpload({
 
       {preview ? (
         <div className="relative">
-          <img
+          <Image
             src={preview}
             alt="プレビュー"
+            width={400}
+            height={192}
             className="w-full h-48 object-cover rounded-lg border-2 border-wa-brown/20"
           />
           <button

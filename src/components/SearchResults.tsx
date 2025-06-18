@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Recipe } from "@/types/recipe";
+import Image from "next/image";
 
 interface SearchResultsProps {
   results: Recipe[];
@@ -115,9 +116,11 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
         {/* 画像 */}
         <div className="aspect-video bg-gradient-to-br from-wa-cream to-wa-orange/20 flex items-center justify-center">
           {recipe.imageUrl ? (
-            <img
+            <Image
               src={recipe.imageUrl}
               alt={recipe.title}
+              width={400}
+              height={225}
               className="w-full h-full object-cover"
             />
           ) : (
@@ -179,9 +182,11 @@ function RecipeListItem({ recipe }: { recipe: Recipe }) {
           {/* 画像 */}
           <div className="w-24 h-24 bg-gradient-to-br from-wa-cream to-wa-orange/20 rounded-lg flex items-center justify-center flex-shrink-0">
             {recipe.imageUrl ? (
-              <img
+              <Image
                 src={recipe.imageUrl}
                 alt={recipe.title}
+                width={96}
+                height={96}
                 className="w-full h-full object-cover rounded-lg"
               />
             ) : (

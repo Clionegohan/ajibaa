@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import ImageUpload from '@/components/ImageUpload'
 
@@ -254,9 +254,11 @@ describe('ImageUpload Component', () => {
     fireEvent.change(fileInput);
 
     // FileReader.onloadを手動でトリガー
-    if (mockFileReader.onload) {
-      mockFileReader.onload({ target: { result: 'data:image/jpeg;base64,mockdata' } } as any);
-    }
+    await act(async () => {
+      if (mockFileReader.onload) {
+        mockFileReader.onload({ target: { result: 'data:image/jpeg;base64,mockdata' } } as any);
+      }
+    });
 
     await waitFor(() => {
       expect(screen.getByAltText('プレビュー')).toBeInTheDocument();
@@ -264,7 +266,10 @@ describe('ImageUpload Component', () => {
 
     // 削除ボタンをクリック
     const removeButton = screen.getByText('×');
-    fireEvent.click(removeButton);
+    
+    await act(async () => {
+      fireEvent.click(removeButton);
+    });
 
     await waitFor(() => {
       expect(screen.queryByAltText('プレビュー')).not.toBeInTheDocument();

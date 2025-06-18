@@ -3,6 +3,7 @@
 import { useQuery } from 'convex/react'
 import { api } from '../../../../convex/_generated/api'
 import { UserProfile } from '@/types/user'
+import Image from 'next/image'
 
 interface UserProfilePageProps {
   params: { id: string }
@@ -53,9 +54,11 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
             <div className="flex-shrink-0">
               <div className="w-24 h-24 bg-wa-orange/20 rounded-full flex items-center justify-center">
                 {user.avatar ? (
-                  <img 
+                  <Image 
                     src={user.avatar} 
                     alt={user.name}
+                    width={96}
+                    height={96}
                     className="w-24 h-24 rounded-full object-cover"
                   />
                 ) : (

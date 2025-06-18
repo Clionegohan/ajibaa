@@ -151,7 +151,7 @@ export default function AdvancedSearch({ onSearchResults, onFiltersChange }: Adv
                          focus:outline-none focus:ring-2 focus:ring-wa-orange"
               >
                 <option value="">すべて</option>
-                {prefectureStats.map(({ prefecture, count }) => (
+                {prefectureStats.map(({ prefecture, count }: any) => (
                   <option key={prefecture} value={prefecture}>
                     {prefecture} ({count}件)
                   </option>
@@ -170,7 +170,7 @@ export default function AdvancedSearch({ onSearchResults, onFiltersChange }: Adv
                          focus:outline-none focus:ring-2 focus:ring-wa-orange"
               >
                 <option value="">すべて</option>
-                {categoryStats.map(({ category, count }) => (
+                {categoryStats.map(({ category, count }: any) => (
                   <option key={category} value={category}>
                     {category} ({count}件)
                   </option>
@@ -241,7 +241,7 @@ export default function AdvancedSearch({ onSearchResults, onFiltersChange }: Adv
               🏷️ タグで絞り込み
             </label>
             <div className="flex flex-wrap gap-2">
-              {popularTags.map(({ tag, count }) => (
+              {popularTags.map(({ tag, count }: any) => (
                 <button
                   key={tag}
                   onClick={() => handleTagToggle(tag)}

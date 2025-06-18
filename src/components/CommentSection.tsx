@@ -156,7 +156,7 @@ export default function CommentSection({ recipeId }: CommentSectionProps) {
             まだコメントがありません。最初のコメントを投稿してみませんか？
           </p>
         ) : (
-          comments.map((comment) => (
+          comments.map((comment: any) => (
             <div
               key={comment._id}
               className="p-4 wa-paper wa-border rounded-lg"

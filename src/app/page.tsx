@@ -217,7 +217,7 @@ export default function Home() {
   
   // 都道府県でフィルタリング
   const filteredRecipes = selectedPrefecture 
-    ? searchedRecipes.filter(recipe => recipe.prefecture === selectedPrefecture)
+    ? searchedRecipes.filter((recipe: any) => recipe.prefecture === selectedPrefecture)
     : searchedRecipes;
 
   return (

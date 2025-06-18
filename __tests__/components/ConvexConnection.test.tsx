@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, act } from '@testing-library/react'
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import Home from '@/app/page'
@@ -31,23 +31,27 @@ jest.mock('convex/react', () => ({
 }));
 
 describe('Convex Connection Test', () => {
-  it('should render development status section', () => {
-    render(
-      <MockConvexProvider>
-        <Home />
-      </MockConvexProvider>
-    );
+  it('should render development status section', async () => {
+    await act(async () => {
+      render(
+        <MockConvexProvider>
+          <Home />
+        </MockConvexProvider>
+      );
+    });
     
     const developmentStatus = screen.getByText(/開発状況/i);
     expect(developmentStatus).toBeInTheDocument();
   });
 
-  it('should show loading state initially', () => {
-    render(
-      <MockConvexProvider>
-        <Home />
-      </MockConvexProvider>
-    );
+  it('should show loading state initially', async () => {
+    await act(async () => {
+      render(
+        <MockConvexProvider>
+          <Home />
+        </MockConvexProvider>
+      );
+    });
     
     const loadingText = screen.getByText(/接続中.../i);
     expect(loadingText).toBeInTheDocument();

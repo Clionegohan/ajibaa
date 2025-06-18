@@ -25,9 +25,7 @@ export default function RecipeEditPage({ params }: RecipeEditPageProps) {
     story: '',
     prefecture: '',
     category: '',
-    difficulty: 1,
     cookingTime: 30,
-    servings: 2,
     tags: [] as string[],
     ingredients: [] as RecipeIngredient[],
     steps: [] as RecipeStep[],
@@ -47,7 +45,7 @@ export default function RecipeEditPage({ params }: RecipeEditPageProps) {
         )
         
         if (useDraft) {
-          setFormData(draftData.data)
+          setFormData(draftData.data as any)
           return
         } else {
           // 下書きを使わない場合は削除
@@ -62,9 +60,7 @@ export default function RecipeEditPage({ params }: RecipeEditPageProps) {
         story: recipe.story || '',
         prefecture: recipe.prefecture || '',
         category: recipe.category || '',
-        difficulty: recipe.difficulty || 1,
         cookingTime: recipe.cookingTime || 30,
-        servings: recipe.servings || 2,
         tags: recipe.tags || [],
         ingredients: recipe.ingredients || [],
         steps: recipe.steps || [],

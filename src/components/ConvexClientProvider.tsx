@@ -11,7 +11,7 @@ const convex = new ConvexReactClient(
 export function ConvexClientProvider({ children }: { children: ReactNode }) {
   return (
     <ConvexProvider client={convex}>
-      <ConvexAuthProvider>
+      <ConvexAuthProvider client={convex}>
         {children}
       </ConvexAuthProvider>
     </ConvexProvider>

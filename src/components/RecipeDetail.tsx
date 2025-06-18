@@ -182,7 +182,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
       )}
 
       {/* コメントセクション */}
-      <CommentSection recipeId={recipe._id} />
+      <CommentSection recipeId={recipe._id as any} />
     </div>
   );
 }
