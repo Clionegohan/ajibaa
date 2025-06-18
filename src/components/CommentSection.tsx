@@ -1,25 +1,42 @@
 import { useState } from "react";
-import { useMutation } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { Id } from "../../convex/_generated/dataModel";
 
 interface Comment {
-  _id: string;
-  recipeId: string;
-  authorId: string;
-  authorName: string;
+  _id: Id<"comments">;
+  recipeId: Id<"recipes">;
+  userId: Id<"users">;
   content: string;
   createdAt: number;
+  updatedAt: number;
+  isPublished: boolean;
+  user: {
+    _id: Id<"users">;
+    name: string;
+    email: string;
+  };
+  createdAtFormatted: string;
 }
 
 interface CommentSectionProps {
-  recipeId: string;
-  comments: Comment[];
+  recipeId: Id<"recipes">;
 }
 
-export default function CommentSection({ recipeId, comments }: CommentSectionProps) {
+export default function CommentSection({ recipeId }: CommentSectionProps) {
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const addComment = useMutation(api.mutations.addComment);
+  const [editingId, setEditingId] = useState<Id<"comments"> | null>(null);
+  const [editContent, setEditContent] = useState("");
+  
+  // リアルタイムでコメントを取得
+  const comments = useQuery(api.comments.getRecipeComments, { recipeId }) || [];
+  const commentCount = useQuery(api.comments.getCommentCount, { recipeId });
+  
+  // Mutations
+  const addComment = useMutation(api.comments.addComment);
+  const deleteComment = useMutation(api.comments.deleteComment);
+  const updateComment = useMutation(api.comments.updateComment);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,15 +45,64 @@ export default function CommentSection({ recipeId, comments }: CommentSectionPro
     
     setIsSubmitting(true);
     try {
-      await addComment({
+      const result = await addComment({
         recipeId,
         content: newComment.trim()
       });
-      setNewComment("");
+      
+      if (result.success) {
+        setNewComment("");
+        // 成功メッセージ（オプション）
+      }
     } catch (error) {
       console.error("Comment submission failed:", error);
+      alert("コメントの投稿に失敗しました。もう一度お試しください。");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleEdit = (comment: Comment) => {
+    setEditingId(comment._id);
+    setEditContent(comment.content);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditContent("");
+  };
+
+  const handleUpdateComment = async (commentId: Id<"comments">) => {
+    if (!editContent.trim()) return;
+    
+    try {
+      const result = await updateComment({
+        commentId,
+        content: editContent.trim()
+      });
+      
+      if (result.success) {
+        setEditingId(null);
+        setEditContent("");
+      }
+    } catch (error) {
+      console.error("Comment update failed:", error);
+      alert("コメントの更新に失敗しました。");
+    }
+  };
+
+  const handleDeleteComment = async (commentId: Id<"comments">) => {
+    if (!confirm("このコメントを削除しますか？")) return;
+    
+    try {
+      const result = await deleteComment({ commentId });
+      
+      if (result.success) {
+        // 削除成功
+      }
+    } catch (error) {
+      console.error("Comment deletion failed:", error);
+      alert("コメントの削除に失敗しました。");
     }
   };
 
@@ -56,7 +122,7 @@ export default function CommentSection({ recipeId, comments }: CommentSectionPro
   return (
     <div className="mt-8">
       <h3 className="text-lg font-semibold text-wa-charcoal mb-4">
-        💬 コメント {comments.length}件
+        💬 コメント {commentCount?.count || 0}件
       </h3>
       
       {/* コメント投稿フォーム */}
@@ -96,16 +162,70 @@ export default function CommentSection({ recipeId, comments }: CommentSectionPro
               className="p-4 wa-paper wa-border rounded-lg"
             >
               <div className="flex justify-between items-start mb-2">
-                <span className="font-medium text-wa-charcoal">
-                  {comment.authorName}
-                </span>
-                <span className="text-xs text-wa-charcoal/50">
-                  {formatRelativeTime(comment.createdAt)}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-wa-charcoal">
+                    {comment.user.name}
+                  </span>
+                  <span className="text-xs text-wa-charcoal/50">
+                    {comment.createdAtFormatted}
+                  </span>
+                </div>
+                
+                {/* 編集・削除ボタン（作成者のみ表示） */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleEdit(comment)}
+                    className="text-xs text-wa-charcoal/60 hover:text-wa-orange transition-colors"
+                    title="編集"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    onClick={() => handleDeleteComment(comment._id)}
+                    className="text-xs text-wa-charcoal/60 hover:text-wa-red transition-colors"
+                    title="削除"
+                  >
+                    🗑️
+                  </button>
+                </div>
               </div>
-              <p className="text-wa-charcoal/80">
-                {comment.content}
-              </p>
+              
+              {editingId === comment._id ? (
+                /* 編集モード */
+                <div className="space-y-2">
+                  <textarea
+                    value={editContent}
+                    onChange={(e) => setEditContent(e.target.value)}
+                    className="w-full px-3 py-2 border border-wa-brown/30 rounded-md 
+                             focus:outline-none focus:ring-2 focus:ring-wa-orange
+                             resize-none h-20"
+                    placeholder="コメントを編集..."
+                  />
+                  <div className="flex justify-end gap-2">
+                    <button
+                      onClick={handleCancelEdit}
+                      className="px-3 py-1 text-sm text-wa-charcoal/70 hover:text-wa-charcoal 
+                               border border-wa-brown/30 rounded transition-colors"
+                    >
+                      キャンセル
+                    </button>
+                    <button
+                      onClick={() => handleUpdateComment(comment._id)}
+                      disabled={!editContent.trim()}
+                      className="px-3 py-1 text-sm bg-wa-orange text-white rounded 
+                               hover:bg-wa-orange/80 disabled:opacity-50 disabled:cursor-not-allowed
+                               transition-colors"
+                    >
+                      更新
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                /* 表示モード */
+                <p className="text-wa-charcoal/80 leading-relaxed">
+                  {comment.content}
+                </p>
+              )}
             </div>
           ))
         )}

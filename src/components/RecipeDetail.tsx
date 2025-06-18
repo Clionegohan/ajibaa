@@ -1,5 +1,6 @@
 import { Recipe } from '@/types/recipe';
 import LikeButton from '@/components/LikeButton';
+import CommentSection from '@/components/CommentSection';
 
 interface RecipeDetailProps {
   recipe: Recipe;
@@ -179,6 +180,9 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
           </div>
         </div>
       )}
+
+      {/* コメントセクション */}
+      <CommentSection recipeId={recipe._id} />
     </div>
   );
 }
