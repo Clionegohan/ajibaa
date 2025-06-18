@@ -1,7 +1,7 @@
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
 
-// レシピ作成 (Phase 1: 認証スキップ版)
+// レシピ作成 (Phase 2: 完全認証版)
 export const createRecipe = mutation({
   args: {
     title: v.string(),
@@ -24,20 +24,29 @@ export const createRecipe = mutation({
     })),
   },
   handler: async (ctx, args) => {
-    // Phase 1: 認証をスキップして基本機能をテスト
-    // Phase 2で認証機能を完全統合予定
+    // Phase 2: 完全な認証システム統合
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("認証が必要です");
+    }
     
-    // 一時的にテストユーザーを使用
-    const tempUserId = "temp-user-id" as any;
-    const tempUserName = "テストユーザー";
+    // 実際のユーザー情報を取得
+    const user = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("email"), identity.email!))
+      .first();
+    
+    if (!user) {
+      throw new Error("ユーザー情報が見つかりません");
+    }
     
     // レシピを作成
     const recipeId = await ctx.db.insert("recipes", {
       title: args.title,
       description: args.description,
       story: args.story,
-      authorId: tempUserId,
-      authorName: tempUserName,
+      authorId: user._id,
+      authorName: user.name,
       prefecture: args.prefecture,
       category: args.category,
       cookingTime: args.cookingTime,
@@ -78,16 +87,28 @@ export const createRecipe = mutation({
   },
 });
 
-// いいね機能 (Phase 1: 認証スキップ版)
+// いいね機能 (Phase 2: 完全認証版)
 export const toggleLike = mutation({
   args: {
     recipeId: v.id("recipes"),
   },
   handler: async (ctx, args) => {
-    // Phase 1: 認証をスキップして基本機能をテスト
-    // Phase 2で認証機能を完全統合予定
+    // Phase 2: 完全な認証システム統合
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("認証が必要です");
+    }
     
-    const tempUserId = "temp-user-id" as any;
+    // 実際のユーザー情報を取得
+    const user = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("email"), identity.email!))
+      .first();
+    
+    if (!user) {
+      throw new Error("ユーザー情報が見つかりません");
+    }
+    
     const { recipeId } = args;
     
     // 既存のいいねレコードを検索
@@ -95,7 +116,7 @@ export const toggleLike = mutation({
       .query("likes")
       .filter((q) => 
         q.and(
-          q.eq(q.field("userId"), tempUserId),
+          q.eq(q.field("userId"), user._id),
           q.eq(q.field("recipeId"), recipeId)
         )
       )
@@ -117,7 +138,7 @@ export const toggleLike = mutation({
     } else {
       // 未いいねなら追加
       await ctx.db.insert("likes", {
-        userId: tempUserId,
+        userId: user._id,
         recipeId,
         createdAt: Date.now(),
       });
@@ -135,94 +156,185 @@ export const toggleLike = mutation({
   },
 });
 
-// コメント機能
+// コメント機能 (Phase 2: 完全認証版)
 export const addComment = mutation({
   args: {
-    recipeId: v.string(),
+    recipeId: v.id("recipes"),
     content: v.string(),
   },
   handler: async (ctx, args) => {
-    // TODO: 認証機能実装後に有効化
-    // const identity = await ctx.auth.getUserIdentity();
-    // if (!identity) throw new Error("認証が必要です");
+    // Phase 2: 完全な認証システム統合
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("認証が必要です");
+    }
     
-    const userId = "temp-user-id"; // 認証実装後に実際のユーザーIDに変更
+    // 実際のユーザー情報を取得
+    const user = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("email"), identity.email!))
+      .first();
+    
+    if (!user) {
+      throw new Error("ユーザー情報が見つかりません");
+    }
+    
     const { recipeId, content } = args;
     
-    console.log("Add comment requested:", { recipeId, content, userId });
+    // コメントをデータベースに保存
+    const commentId = await ctx.db.insert("comments", {
+      userId: user._id,
+      recipeId,
+      content,
+      isPublished: true,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
     
-    // TODO: 実際のコメント機能実装
-    // 1. コメントをデータベースに保存
-    // 2. 投稿者の名前を取得
-    // 3. リアルタイム更新
-    
-    // 開発中のメッセージ
-    console.log("コメント機能は開発中です");
-    
-    return { success: true };
+    return { 
+      success: true, 
+      commentId,
+      message: "コメントを投稿しました" 
+    };
   },
 });
 
-// レシピ更新
+// レシピ更新 (Phase 2: 完全認証版)
 export const updateRecipe = mutation({
   args: {
-    id: v.string(),
+    id: v.id("recipes"),
     title: v.string(),
     description: v.string(),
     story: v.optional(v.string()),
     prefecture: v.string(),
     category: v.string(),
-    difficulty: v.number(),
     cookingTime: v.number(),
-    servings: v.number(),
     tags: v.optional(v.array(v.string())),
     isPublished: v.boolean(),
   },
   handler: async (ctx, args) => {
-    // TODO: 認証機能実装後に有効化
-    // const identity = await ctx.auth.getUserIdentity();
-    // if (!identity) throw new Error("認証が必要です");
+    // Phase 2: 完全な認証システム統合
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("認証が必要です");
+    }
+    
+    // 実際のユーザー情報を取得
+    const user = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("email"), identity.email!))
+      .first();
+    
+    if (!user) {
+      throw new Error("ユーザー情報が見つかりません");
+    }
     
     const { id, ...updateData } = args;
     
-    console.log("Recipe update requested:", { id, updateData });
+    // 既存レシピの権限確認
+    const existingRecipe = await ctx.db.get(id);
+    if (!existingRecipe) {
+      throw new Error("レシピが見つかりません");
+    }
     
-    // TODO: 実際のDB更新処理
-    // await ctx.db.patch(id as Id<"recipes">, {
-    //   ...updateData,
-    //   updatedAt: Date.now(),
-    // });
+    if (existingRecipe.authorId !== user._id) {
+      throw new Error("このレシピを編集する権限がありません");
+    }
     
-    // 開発中のメッセージ
-    console.log("レシピ更新機能は開発中です");
+    // レシピを更新
+    await ctx.db.patch(id, {
+      ...updateData,
+      updatedAt: Date.now(),
+    });
     
-    return { success: true };
+    return { 
+      success: true,
+      message: "レシピを更新しました" 
+    };
   },
 });
 
-// レシピ削除
+// レシピ削除 (Phase 2: 完全認証版)
 export const deleteRecipe = mutation({
   args: {
-    id: v.string(),
+    id: v.id("recipes"),
   },
   handler: async (ctx, args) => {
-    // TODO: 認証機能実装後に有効化
-    // const identity = await ctx.auth.getUserIdentity();
-    // if (!identity) throw new Error("認証が必要です");
+    // Phase 2: 完全な認証システム統合
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("認証が必要です");
+    }
+    
+    // 実際のユーザー情報を取得
+    const user = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("email"), identity.email!))
+      .first();
+    
+    if (!user) {
+      throw new Error("ユーザー情報が見つかりません");
+    }
     
     const { id } = args;
     
-    console.log("Recipe delete requested:", { id });
+    // 既存レシピの権限確認
+    const existingRecipe = await ctx.db.get(id);
+    if (!existingRecipe) {
+      throw new Error("レシピが見つかりません");
+    }
     
-    // TODO: 実際のDB削除処理
-    // 1. 権限確認（作成者のみ削除可能）
-    // 2. レシピ削除
-    // 3. 関連データ（コメント、いいね）も削除
-    // await ctx.db.delete(id as Id<"recipes">);
+    if (existingRecipe.authorId !== user._id) {
+      throw new Error("このレシピを削除する権限がありません");
+    }
     
-    // 開発中のメッセージ
-    console.log("レシピ削除機能は開発中です");
+    // 関連データを削除
+    // 1. コメントを削除
+    const comments = await ctx.db
+      .query("comments")
+      .filter((q) => q.eq(q.field("recipeId"), id))
+      .collect();
     
-    return { success: true };
+    for (const comment of comments) {
+      await ctx.db.delete(comment._id);
+    }
+    
+    // 2. いいねを削除
+    const likes = await ctx.db
+      .query("likes")
+      .filter((q) => q.eq(q.field("recipeId"), id))
+      .collect();
+    
+    for (const like of likes) {
+      await ctx.db.delete(like._id);
+    }
+    
+    // 3. 材料を削除
+    const ingredients = await ctx.db
+      .query("recipeIngredients")
+      .filter((q) => q.eq(q.field("recipeId"), id))
+      .collect();
+    
+    for (const ingredient of ingredients) {
+      await ctx.db.delete(ingredient._id);
+    }
+    
+    // 4. 手順を削除
+    const steps = await ctx.db
+      .query("recipeSteps")
+      .filter((q) => q.eq(q.field("recipeId"), id))
+      .collect();
+    
+    for (const step of steps) {
+      await ctx.db.delete(step._id);
+    }
+    
+    // 5. レシピ本体を削除
+    await ctx.db.delete(id);
+    
+    return { 
+      success: true,
+      message: "レシピを削除しました" 
+    };
   },
 });

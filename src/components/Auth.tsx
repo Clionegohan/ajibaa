@@ -1,9 +1,16 @@
 "use client";
 
+import { useAuthActions } from "@convex-dev/auth/react";
+
+// Phase 2: 段階的実装 - まずGoogle認証のみ対応
+// useCurrentUserは後の段階で有効化
+let useCurrentUser: () => any;
+
 export default function Auth() {
-  // Phase 1では認証機能をシンプルに実装
-  // Phase 2で完全なConvex認証を統合予定
-  const user = null;
+  const { signIn, signOut } = useAuthActions();
+  
+  // Phase 2: 段階的実装 - まず認証フローのみ確立
+  const user = null; // 後でuseCurrentUser()に変更予定
 
   if (user) {
     return (
@@ -21,6 +28,15 @@ export default function Auth() {
     );
   }
 
+  const handleGoogleSignIn = async () => {
+    try {
+      await signIn("google");
+    } catch (error) {
+      console.error("Google認証エラー:", error);
+      alert("ログインに失敗しました。もう一度お試しください。");
+    }
+  };
+
   return (
     <div className="text-center p-6 wa-paper wa-border max-w-md mx-auto">
       <h2 className="text-xl font-semibold text-wa-charcoal mb-4">
@@ -34,7 +50,8 @@ export default function Auth() {
       </p>
       
       <button
-        onClick={() => alert("Phase 2で認証機能を完全実装予定")}
+        type="button"
+        onClick={handleGoogleSignIn}
         className="w-full px-6 py-3 wa-paper wa-border bg-white hover:bg-wa-cream/50 
                    text-wa-charcoal font-medium rounded-lg transition-all duration-200
                    flex items-center justify-center gap-3"
