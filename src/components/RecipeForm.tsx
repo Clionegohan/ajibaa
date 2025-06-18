@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import ImageUpload from "./ImageUpload";
 
 interface Ingredient {
   name: string;
@@ -34,6 +35,10 @@ export default function RecipeForm() {
   const [steps, setSteps] = useState<CookingStep[]>([
     { instruction: "", tips: "" }
   ]);
+  
+  // 画像状態
+  const [imageStorageId, setImageStorageId] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   
   // エラー状態
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -77,6 +82,12 @@ export default function RecipeForm() {
     setSteps(newSteps);
   };
 
+  // 画像アップロード処理
+  const handleImageUpload = (storageId: string, url: string) => {
+    setImageStorageId(storageId);
+    setImageUrl(url);
+  };
+
   // バリデーション
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -105,9 +116,9 @@ export default function RecipeForm() {
         story: story || undefined,
         prefecture,
         category,
-        difficulty,
         cookingTime,
-        servings,
+        imageStorageId: imageStorageId || undefined,
+        imageUrl: imageUrl || undefined,
         ingredients: ingredients.filter(ing => ing.name.trim()),
         steps: steps.filter(step => step.instruction.trim()),
       });
@@ -125,6 +136,8 @@ export default function RecipeForm() {
       setServings(2);
       setIngredients([{ name: "", amount: "", unit: "", note: "" }]);
       setSteps([{ instruction: "", tips: "" }]);
+      setImageStorageId(null);
+      setImageUrl(null);
       setErrors({});
     } catch (error) {
       console.error("Recipe creation failed:", error);
@@ -260,6 +273,22 @@ export default function RecipeForm() {
                 placeholder="このレシピの特徴や魅力を教えてください"
               />
               {errors.description && <p className="text-wa-red text-xs mt-1">{errors.description}</p>}
+            </div>
+
+            {/* 画像アップロードセクション */}
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-wa-charcoal mb-1">
+                📸 レシピ写真
+              </label>
+              <ImageUpload
+                onImageUpload={handleImageUpload}
+                maxSizeMB={5}
+                disabled={isSubmitting}
+                className="w-full"
+              />
+              <p className="text-xs text-wa-charcoal/60 mt-1">
+                ※ おいしそうな写真があると、より多くの人に見てもらえます
+              </p>
             </div>
 
             <div className="mt-4">
